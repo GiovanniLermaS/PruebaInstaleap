@@ -1,6 +1,8 @@
 package com.example.pruebainstaleap.db.model
 
-class ResultService {
+import java.io.Serializable
+
+class ResultService : Serializable {
 
     val id: Int? = null
     val backdrop_path: String? = null

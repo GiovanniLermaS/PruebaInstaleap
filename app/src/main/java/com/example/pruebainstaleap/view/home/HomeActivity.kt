@@ -1,6 +1,7 @@
-package com.example.pruebainstaleap.view
+package com.example.pruebainstaleap.view.home
 
 import android.animation.ObjectAnimator
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
@@ -11,8 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.pruebainstaleap.R
 import com.example.pruebainstaleap.db.model.ResultService
 import com.example.pruebainstaleap.utils.BASE_URL_IMAGE
-import com.example.pruebainstaleap.view.fragment.HomeFragment
-import com.example.pruebainstaleap.view.fragment.`interface`.MoviesTvShowInterface
+import com.example.pruebainstaleap.utils.RESULT_SERVICE
+import com.example.pruebainstaleap.view.detail.DetailActivity
+import com.example.pruebainstaleap.view.home.fragment.HomeFragment
+import com.example.pruebainstaleap.view.home.fragment.`interface`.MoviesTvShowInterface
 import com.example.pruebainstaleap.viewmodel.HomeActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.toolbar.*
@@ -28,6 +31,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
 
     private var temporalId: Int? = null
 
+    private var resultService: ResultService? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -42,7 +47,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
             consumeMoviesPopular(moviesNowPlaying.results)
         })
 
-        sheetBehavior = BottomSheetBehavior.from(clDetailMovieTvShowPoster)
+        sheetBehavior = BottomSheetBehavior.from(clDetailBottom)
         sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
@@ -64,11 +69,17 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
                 tvMovies.visibility = View.INVISIBLE
                 animationTextView(tvMyList, -tvMyList.x + 250)
             }
-            R.id.ivCloseDetailPoster -> sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+            R.id.ivCloseBottom -> sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+            R.id.clDetailBottom -> {
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra(RESULT_SERVICE, resultService)
+                startActivity(intent)
+            }
         }
     }
 
     override fun clickMovieTvShow(resultService: ResultService?) {
+        this.resultService = resultService
         if (sheetBehavior?.state == BottomSheetBehavior.STATE_HIDDEN) {
             temporalId = resultService?.id
             setDataResultService(resultService)
@@ -134,8 +145,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
     }
 
     private fun setDataResultService(resultService: ResultService?) {
-        ivImageDetailPoster.setImageURI(Uri.parse(BASE_URL_IMAGE + resultService?.poster_path))
-        tvTitleDetailsPoster.text = resultService?.title
-        tvDescriptionPoster.text = resultService?.overview
+        ivImageBottom.setImageURI(Uri.parse(BASE_URL_IMAGE + resultService?.poster_path))
+        tvTitleBottom.text = resultService?.title
+        tvDescriptionBottom.text = resultService?.overview
     }
 }

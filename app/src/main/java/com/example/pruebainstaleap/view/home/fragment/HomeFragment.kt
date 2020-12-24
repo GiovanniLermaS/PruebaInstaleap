@@ -1,4 +1,4 @@
-package com.example.pruebainstaleap.view.fragment
+package com.example.pruebainstaleap.view.home.fragment
 
 import android.net.Uri
 import android.os.Bundle
@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pruebainstaleap.R
 import com.example.pruebainstaleap.db.model.ResultService
 import com.example.pruebainstaleap.utils.BASE_URL_IMAGE
-import com.example.pruebainstaleap.view.fragment.`interface`.MoviesTvShowInterface
-import com.example.pruebainstaleap.view.fragment.adapter.MoviesTvShowAdapter
+import com.example.pruebainstaleap.view.home.fragment.`interface`.MoviesTvShowInterface
+import com.example.pruebainstaleap.view.home.fragment.adapter.MoviesTvShowAdapter
 import com.facebook.drawee.view.SimpleDraweeView
 
 class HomeFragment(

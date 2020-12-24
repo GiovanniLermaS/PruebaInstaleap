@@ -12,6 +12,7 @@ const val MOVIES_NOW_PLAYING = "movie/now_playing?api_key=$API_KEY&language=$LAN
 const val MOVIES_POPULAR = "movie/popular?api_key=$API_KEY&language=$LANGUAGE"
 const val TV_AIRING_TODAY = "tv/airing_today?api_key=$API_KEY&language=$LANGUAGE\""
 const val TV_POPULAR = "tv/popular?api_key=$API_KEY&language=$LANGUAGE\""
+const val RESULT_SERVICE = "resultService"
 
 fun hasNetwork(context: Context): Boolean? {
     var isConnected: Boolean? = false

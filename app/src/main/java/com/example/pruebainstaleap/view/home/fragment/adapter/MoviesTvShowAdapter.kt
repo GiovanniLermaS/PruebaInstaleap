@@ -1,4 +1,4 @@
-package com.example.pruebainstaleap.view.fragment.adapter
+package com.example.pruebainstaleap.view.home.fragment.adapter
 
 import android.net.Uri
 import android.view.LayoutInflater
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pruebainstaleap.R
 import com.example.pruebainstaleap.db.model.ResultService
 import com.example.pruebainstaleap.utils.BASE_URL_IMAGE
-import com.example.pruebainstaleap.view.fragment.`interface`.MoviesTvShowInterface
+import com.example.pruebainstaleap.view.home.fragment.`interface`.MoviesTvShowInterface
 import com.facebook.drawee.view.SimpleDraweeView
 
 class MoviesTvShowAdapter(private val listMoviesTvSeasons: ArrayList<ResultService>?, private val moviesTvShowInterface: MoviesTvShowInterface?) :
