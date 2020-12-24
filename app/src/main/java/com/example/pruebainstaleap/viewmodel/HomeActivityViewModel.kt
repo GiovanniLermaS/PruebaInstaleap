@@ -13,25 +13,28 @@ import com.example.pruebainstaleap.utils.TV_POPULAR
 
 class HomeActivityViewModel : ViewModel() {
 
-    private var servicesLiveData: MutableLiveData<ResponseService>? = null
+    private var servicesLiveDataMoviesNowPlaying: MutableLiveData<ResponseService>? = null
+    private var servicesLiveDataMoviesPopular: MutableLiveData<ResponseService>? = null
+    private var servicesLiveDataTvAiringToday: MutableLiveData<ResponseService>? = null
+    private var servicesLiveDataTvPopular: MutableLiveData<ResponseService>? = null
 
     fun getMoviesNowPlaying(context: Context, page: Int): LiveData<ResponseService> {
-        servicesLiveData = HomeActivityRepository().getResponse(context, MOVIES_NOW_PLAYING, page)
-        return servicesLiveData as MutableLiveData<ResponseService>
+        servicesLiveDataMoviesNowPlaying = HomeActivityRepository().getResponse(context, MOVIES_NOW_PLAYING, page)
+        return servicesLiveDataMoviesNowPlaying as MutableLiveData<ResponseService>
     }
 
     fun getMoviesPopular(context: Context, page: Int): LiveData<ResponseService> {
-        servicesLiveData = HomeActivityRepository().getResponse(context, MOVIES_POPULAR, page)
-        return servicesLiveData as MutableLiveData<ResponseService>
+        servicesLiveDataMoviesPopular = HomeActivityRepository().getResponse(context, MOVIES_POPULAR, page)
+        return servicesLiveDataMoviesPopular as MutableLiveData<ResponseService>
     }
 
     fun getTvAiringToday(context: Context, page: Int): LiveData<ResponseService> {
-        servicesLiveData = HomeActivityRepository().getResponse(context, TV_AIRING_TODAY, page)
-        return servicesLiveData as MutableLiveData<ResponseService>
+        servicesLiveDataTvAiringToday = HomeActivityRepository().getResponse(context, TV_AIRING_TODAY, page)
+        return servicesLiveDataTvAiringToday as MutableLiveData<ResponseService>
     }
 
     fun getTvPopular(context: Context, page: Int): LiveData<ResponseService> {
-        servicesLiveData = HomeActivityRepository().getResponse(context, TV_POPULAR, page)
-        return servicesLiveData as MutableLiveData<ResponseService>
+        servicesLiveDataTvPopular = HomeActivityRepository().getResponse(context, TV_POPULAR, page)
+        return servicesLiveDataTvPopular as MutableLiveData<ResponseService>
     }
 }

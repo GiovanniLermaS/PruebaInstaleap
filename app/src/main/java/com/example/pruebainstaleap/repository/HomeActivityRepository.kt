@@ -9,15 +9,12 @@ import retrofit2.Call
 import retrofit2.Callback
 
 class HomeActivityRepository {
-
-    private val serviceLatestMovie =
-        MutableLiveData<ResponseService>()
-
     fun getResponse(
         context: Context,
         url: String,
         page: Int
     ): MutableLiveData<ResponseService> {
+        val serviceResponse = MutableLiveData<ResponseService>()
         val call = RetrofitClient(context).apiInterface.getNowPlayingMovies(url, page)
         call.enqueue(object : Callback<ResponseService> {
             override fun onFailure(
@@ -31,11 +28,10 @@ class HomeActivityRepository {
                 call: Call<ResponseService>,
                 responseService: retrofit2.Response<ResponseService>
             ) {
-                serviceLatestMovie.value =
+                serviceResponse.value =
                     responseService.body() as ResponseService
             }
         })
-
-        return serviceLatestMovie
+        return serviceResponse
     }
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clDetailMovieTvShowPoster"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_border_top_black_rectangle"
+        fresco:behavior_hideable="true"
+        fresco:behavior_peekHeight="200dp"
+        fresco:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/ivImageDetailPoster"
+            android:layout_width="120dp"
+            android:layout_height="170dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            fresco:layout_constraintBottom_toBottomOf="parent"
+            fresco:layout_constraintStart_toStartOf="parent"
+            fresco:layout_constraintTop_toTopOf="parent"
+            fresco:roundedCornerRadius="10dp" />
+
+        <TextView
+            android:id="@+id/tvTitleDetailsPoster"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            fresco:layout_constraintEnd_toStartOf="@+id/ivCloseDetailPoster"
+            fresco:layout_constraintStart_toEndOf="@+id/ivImageDetailPoster"
+            fresco:layout_constraintTop_toTopOf="@+id/ivImageDetailPoster" />
+
+        <ImageView
+            android:id="@+id/ivCloseDetailPoster"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:onClick="onClick"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            fresco:layout_constraintEnd_toEndOf="parent"
+            fresco:layout_constraintTop_toTopOf="@+id/tvTitleDetailsPoster" />
+
+        <TextView
+            android:id="@+id/tvDescriptionPoster"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:ellipsize="end"
+            android:lines="5"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            fresco:layout_constraintEnd_toEndOf="@+id/ivCloseDetailPoster"
+            fresco:layout_constraintStart_toStartOf="@+id/tvTitleDetailsPoster"
+            fresco:layout_constraintTop_toBottomOf="@+id/tvTitleDetailsPoster" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
