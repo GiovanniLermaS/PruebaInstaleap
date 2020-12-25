@@ -8,14 +8,15 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.pruebainstaleap.R
 import com.example.pruebainstaleap.db.model.ResultService
 import com.example.pruebainstaleap.utils.BASE_URL_IMAGE
 import com.example.pruebainstaleap.utils.RESULT_SERVICE
+import com.example.pruebainstaleap.utils.appDatabase
 import com.example.pruebainstaleap.view.detail.DetailActivity
 import com.example.pruebainstaleap.view.home.fragment.MoviesTvShowFragment
+import com.example.pruebainstaleap.view.home.fragment.MyListFragment
 import com.example.pruebainstaleap.view.home.fragment.interfaces.MoviesTvShowInterface
 import com.example.pruebainstaleap.viewmodel.HomeActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -44,6 +45,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+        appDatabase(this)
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -51,7 +53,7 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
 
         mainActivityViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
         mainActivityViewModel.getMoviesNowPlaying(this, 1)
-            .observe(this, Observer { moviesNowPlaying ->
+            .observe(this, { moviesNowPlaying ->
                 consumeMoviesPopular(moviesNowPlaying.results)
             })
         sheetBehavior = BottomSheetBehavior.from(clDetailBottom)
@@ -61,13 +63,33 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btPlay -> Toast.makeText(this, "Reproducir", Toast.LENGTH_LONG).show()
-            R.id.tvShows -> showByType(tvShows, tvMovies, false)
-            R.id.tvMovies -> showByType(tvMovies, tvShows, true)
+            R.id.tvShows -> showByType(
+                tvShows, tvMovies, tvMyList,
+                isMovie = false,
+                isMyList = false
+            )
+            R.id.tvMovies -> showByType(
+                tvMovies, tvShows, tvMyList,
+                isMovie = true,
+                isMyList = false
+            )
+            R.id.tvMyList -> showByType(
+                tvMyList, tvMovies, tvShows,
+                isMovie = false,
+                isMyList = true
+            )
             R.id.ivCloseBottom -> sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             R.id.clDetailBottom -> {
-                val intent = Intent(this, DetailActivity::class.java)
-                intent.putExtra(RESULT_SERVICE, resultService)
-                startActivity(intent)
+                if (sheetBehavior?.state == BottomSheetBehavior.STATE_EXPANDED)
+                    sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
+
+                Timer().schedule(object : TimerTask() {
+                    override fun run() {
+                        val intent = Intent(this@HomeActivity, DetailActivity::class.java)
+                        intent.putExtra(RESULT_SERVICE, resultService)
+                        this@HomeActivity.startActivity(intent)
+                    }
+                }, 100)
             }
         }
     }
@@ -146,19 +168,38 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
     private fun showByType(
         tvAnimation: TextView?,
         tvShowHide1: TextView?,
-        isMovie: Boolean?
+        tvShowHide2: TextView?,
+        isMovie: Boolean?,
+        isMyList: Boolean?
     ) {
-        if (tvShowHide1?.visibility == View.VISIBLE) {
+        if (tvShowHide1?.visibility == View.VISIBLE && tvShowHide2?.visibility == View.VISIBLE) {
             tvShowHide1.visibility = View.INVISIBLE
+            tvShowHide2.visibility = View.INVISIBLE
             animationTextView(tvAnimation!!, -tvAnimation.x + 250f)
-            if (isMovie!!)
-                showFragment(moviesNowPlaying!![0], moviesNowPlaying, moviesPopular, null, null)
-            else showFragment(tvAiringToday!![0], null, null, tvAiringToday, tvPopular)
+            when {
+                isMovie!! -> showFragment(
+                    moviesNowPlaying!![0],
+                    moviesNowPlaying,
+                    moviesPopular,
+                    null,
+                    null
+                )
+                isMyList!! -> {
+                    val ft = supportFragmentManager.beginTransaction()
+                    ft.replace(
+                        R.id.fg1,
+                        MyListFragment(this)
+                    )
+                    ft.commit()
+                }
+                else -> showFragment(tvAiringToday!![0], null, null, tvAiringToday, tvPopular)
+            }
         } else {
             animationTextView(tvAnimation!!, -tvAnimation.x + 250f)
             Timer().schedule(object : TimerTask() {
                 override fun run() {
                     tvShowHide1?.visibility = View.VISIBLE
+                    tvShowHide2?.visibility = View.VISIBLE
                 }
             }, 1000)
             showFragment(
@@ -195,8 +236,21 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
 
     override fun onBackPressed() {
         when {
-            tvShows.visibility == View.VISIBLE -> showByType(tvShows, tvMovies, false)
-            tvMovies.visibility == View.VISIBLE -> showByType(tvMovies, tvShows, false)
+            tvShows.visibility == View.VISIBLE -> showByType(
+                tvShows, tvMovies, tvMyList,
+                isMovie = false,
+                isMyList = false
+            )
+            tvMovies.visibility == View.VISIBLE -> showByType(
+                tvMovies, tvShows, tvMyList,
+                isMovie = false,
+                isMyList = false
+            )
+            tvMyList.visibility == View.VISIBLE -> showByType(
+                tvMyList, tvShows, tvMovies,
+                isMovie = false,
+                isMyList = false
+            )
             else -> super.onBackPressed()
         }
     }

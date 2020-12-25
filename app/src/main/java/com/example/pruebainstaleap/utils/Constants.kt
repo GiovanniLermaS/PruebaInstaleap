@@ -1,8 +1,14 @@
 package com.example.pruebainstaleap.utils
 
 import android.content.Context
+import android.content.res.Resources
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat
+import androidx.room.Room
+import com.example.pruebainstaleap.db.AppDatabase
+import com.example.pruebainstaleap.db.model.ResultService
 
 const val BASE_URL = "https://api.themoviedb.org/3/"
 const val BASE_URL_IMAGE = "https://image.tmdb.org/t/p/original"
@@ -14,6 +20,17 @@ const val TV_AIRING_TODAY = "tv/airing_today?api_key=$API_KEY&language=$LANGUAGE
 const val TV_POPULAR = "tv/popular?api_key=$API_KEY&language=$LANGUAGE\""
 const val RESULT_SERVICE = "resultService"
 
+var database: AppDatabase? = null
+
+fun appDatabase(context: Context) {
+    if (database == null)
+        database = Room.databaseBuilder(
+            context,
+            AppDatabase::class.java,
+            "result-service"
+        ).build()
+}
+
 fun hasNetwork(context: Context): Boolean? {
     var isConnected: Boolean? = false
     val connectivityManager =
@@ -22,4 +39,32 @@ fun hasNetwork(context: Context): Boolean? {
     if (activeNetwork != null && activeNetwork.isConnected)
         isConnected = true
     return isConnected
+}
+
+fun setImageAddOrRemoveMyList(
+    resultService: ResultService?,
+    ivAddMyList: ImageView,
+    resources: Resources,
+    image1: Int,
+    image2: Int
+): Boolean {
+    if (resultService == null) {
+        ivAddMyList.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                image1,
+                null
+            )
+        )
+        return true
+    } else {
+        ivAddMyList.setImageDrawable(
+            ResourcesCompat.getDrawable(
+                resources,
+                image2,
+                null
+            )
+        )
+        return false
+    }
 }
