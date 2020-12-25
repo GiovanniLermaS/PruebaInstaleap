@@ -1,4 +1,4 @@
-package com.example.pruebainstaleap.view.home.fragment.`interface`
+package com.example.pruebainstaleap.view.home.fragment.interfaces
 
 import com.example.pruebainstaleap.db.model.ResultService
 

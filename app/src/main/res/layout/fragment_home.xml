@@ -9,9 +9,8 @@
         android:id="@+id/clPrincipalImage"
         layout="@layout/principal_image"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="350dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent=".3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,6 +22,7 @@
         android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clPrincipalImage"
         tools:text="Drama" />
@@ -34,34 +34,11 @@
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvOne" />
-
-    <TextView
-        android:id="@+id/tvTwo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="@android:color/white"
-        android:textSize="17sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvOne"
-        tools:text="Drama" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTwo"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:nestedScrollingEnabled="false"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTwo" />
 
     <TextView
         android:id="@+id/tvThree"
@@ -71,8 +48,9 @@
         android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvTwo"
+        app:layout_constraintTop_toBottomOf="@+id/rvOne"
         tools:text="Drama" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -82,10 +60,37 @@
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvThree" />
+
+    <TextView
+        android:id="@+id/tvTwo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="17sp"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rvThree"
+        tools:text="Drama" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTwo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:nestedScrollingEnabled="false"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTwo" />
 
     <TextView
         android:id="@+id/tvFour"
@@ -95,8 +100,9 @@
         android:layout_marginTop="10dp"
         android:textColor="@android:color/white"
         android:textSize="17sp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rvThree"
+        app:layout_constraintTop_toBottomOf="@+id/rvTwo"
         tools:text="Drama" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -106,6 +112,7 @@
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="false"
         android:orientation="horizontal"
+        android:visibility="gone"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

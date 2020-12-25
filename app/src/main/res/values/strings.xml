@@ -5,8 +5,6 @@
     <string name="myList">Mi lista</string>
     <string name="play">Reproducir</string>
     <string name="info">Información</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="moviesNowPlaying">Reproducionando en el momento</string>
     <string name="moviesPopular">Películas más populares</string>
     <string name="tvAiringToday">Al aire hoy</string>

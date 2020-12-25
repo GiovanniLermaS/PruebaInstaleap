@@ -5,23 +5,23 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.pruebainstaleap.R
 import com.example.pruebainstaleap.db.model.ResultService
 import com.example.pruebainstaleap.utils.BASE_URL_IMAGE
 import com.example.pruebainstaleap.utils.RESULT_SERVICE
 import com.example.pruebainstaleap.view.detail.DetailActivity
-import com.example.pruebainstaleap.view.home.fragment.HomeFragment
-import com.example.pruebainstaleap.view.home.fragment.`interface`.MoviesTvShowInterface
+import com.example.pruebainstaleap.view.home.fragment.MoviesTvShowFragment
+import com.example.pruebainstaleap.view.home.fragment.interfaces.MoviesTvShowInterface
 import com.example.pruebainstaleap.viewmodel.HomeActivityViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.toolbar.*
 import kotlinx.android.synthetic.main.view_bottom_sheet_details.*
 import java.util.*
-
 
 class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInterface {
 
@@ -33,20 +33,27 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
 
     private var resultService: ResultService? = null
 
+    private var moviesNowPlaying: ArrayList<ResultService>? = null
+
+    private var moviesPopular: ArrayList<ResultService>? = null
+
+    private var tvAiringToday: ArrayList<ResultService>? = null
+
+    private var tvPopular: ArrayList<ResultService>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_IMMERSIVE)
 
         mainActivityViewModel = ViewModelProvider(this).get(HomeActivityViewModel::class.java)
-        mainActivityViewModel.getMoviesNowPlaying(this, 1).observe(this, { moviesNowPlaying ->
-            consumeMoviesPopular(moviesNowPlaying.results)
-        })
-
+        mainActivityViewModel.getMoviesNowPlaying(this, 1)
+            .observe(this, Observer { moviesNowPlaying ->
+                consumeMoviesPopular(moviesNowPlaying.results)
+            })
         sheetBehavior = BottomSheetBehavior.from(clDetailBottom)
         sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
     }
@@ -54,21 +61,8 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.btPlay -> Toast.makeText(this, "Reproducir", Toast.LENGTH_LONG).show()
-            R.id.tvShows -> {
-                animationTextView(tvShows, -tvShows.x + 250f)
-                tvMovies.visibility = View.INVISIBLE
-                tvMyList.visibility = View.INVISIBLE
-            }
-            R.id.tvMovies -> {
-                tvShows.visibility = View.INVISIBLE
-                animationTextView(tvMovies, -tvMovies.x + 250)
-                tvMyList.visibility = View.INVISIBLE
-            }
-            R.id.tvMyList -> {
-                tvShows.visibility = View.INVISIBLE
-                tvMovies.visibility = View.INVISIBLE
-                animationTextView(tvMyList, -tvMyList.x + 250)
-            }
+            R.id.tvShows -> showByType(tvShows, tvMovies, false)
+            R.id.tvMovies -> showByType(tvMovies, tvShows, true)
             R.id.ivCloseBottom -> sheetBehavior?.state = BottomSheetBehavior.STATE_HIDDEN
             R.id.clDetailBottom -> {
                 val intent = Intent(this, DetailActivity::class.java)
@@ -128,19 +122,18 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
         moviesPopular: ArrayList<ResultService>?,
         tvAiringToday: ArrayList<ResultService>?
     ) {
+        this.moviesNowPlaying = moviesNowPlaying
+        this.moviesPopular = moviesPopular
+        this.tvAiringToday = tvAiringToday
         mainActivityViewModel.getTvPopular(this, 1).observe(this, { tvPopular ->
-            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(
-                R.id.fg1,
-                HomeFragment(
-                    moviesNowPlaying,
-                    moviesPopular,
-                    tvAiringToday,
-                    tvPopular.results,
-                    this
-                )
+            this.tvPopular = tvPopular.results
+            showFragment(
+                moviesNowPlaying!![0],
+                moviesNowPlaying,
+                moviesPopular,
+                tvAiringToday,
+                tvPopular.results
             )
-            ft.commit()
         })
     }
 
@@ -148,5 +141,63 @@ class HomeActivity : AppCompatActivity(), View.OnClickListener, MoviesTvShowInte
         ivImageBottom.setImageURI(Uri.parse(BASE_URL_IMAGE + resultService?.poster_path))
         tvTitleBottom.text = resultService?.title
         tvDescriptionBottom.text = resultService?.overview
+    }
+
+    private fun showByType(
+        tvAnimation: TextView?,
+        tvShowHide1: TextView?,
+        isMovie: Boolean?
+    ) {
+        if (tvShowHide1?.visibility == View.VISIBLE) {
+            tvShowHide1.visibility = View.INVISIBLE
+            animationTextView(tvAnimation!!, -tvAnimation.x + 250f)
+            if (isMovie!!)
+                showFragment(moviesNowPlaying!![0], moviesNowPlaying, moviesPopular, null, null)
+            else showFragment(tvAiringToday!![0], null, null, tvAiringToday, tvPopular)
+        } else {
+            animationTextView(tvAnimation!!, -tvAnimation.x + 250f)
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    tvShowHide1?.visibility = View.VISIBLE
+                }
+            }, 1000)
+            showFragment(
+                moviesNowPlaying!![0],
+                moviesNowPlaying,
+                moviesPopular,
+                tvAiringToday,
+                tvPopular
+            )
+        }
+    }
+
+    private fun showFragment(
+        resultService: ResultService?,
+        listMoviesNowPlaying: ArrayList<ResultService>?,
+        listMoviesPopular: ArrayList<ResultService>?,
+        listTvAiringToday: ArrayList<ResultService>?,
+        listTvPopular: ArrayList<ResultService>?
+    ) {
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(
+            R.id.fg1,
+            MoviesTvShowFragment(
+                resultService,
+                listMoviesNowPlaying,
+                listMoviesPopular,
+                listTvAiringToday,
+                listTvPopular,
+                this
+            )
+        )
+        ft.commit()
+    }
+
+    override fun onBackPressed() {
+        when {
+            tvShows.visibility == View.VISIBLE -> showByType(tvShows, tvMovies, false)
+            tvMovies.visibility == View.VISIBLE -> showByType(tvMovies, tvShows, false)
+            else -> super.onBackPressed()
+        }
     }
 }

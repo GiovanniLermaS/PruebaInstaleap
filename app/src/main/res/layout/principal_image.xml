@@ -17,16 +17,16 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@drawable/degraded_principal_image"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPrincipalImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/ivPrincipalImage" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clAddMyList"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPrincipalImage"
         app:layout_constraintEnd_toStartOf="@+id/btPlay"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/btPlay">
@@ -80,7 +80,7 @@
         android:textColor="@android:color/black"
         android:textSize="15sp"
         app:drawableStartCompat="@drawable/ic_play"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPrincipalImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -88,7 +88,7 @@
         android:id="@+id/clInfoPoster"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivPrincipalImage"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/btPlay"
         app:layout_constraintTop_toTopOf="@+id/btPlay">
